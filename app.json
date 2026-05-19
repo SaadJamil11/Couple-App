@@ -1,0 +1,72 @@
+{
+  "expo": {
+    "name": "Tethered",
+    "slug": "tethered-couple-memory",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "tethered",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#FFF6EC"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tethered.couplememory",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Tethered needs access to your photos so it can build a beautiful timeline of your relationship.",
+        "NSPhotoLibraryAddUsageDescription": "Tethered can save memory images back to your library.",
+        "NSMicrophoneUsageDescription": "Tethered uses the microphone to record voice notes for your partner."
+      }
+    },
+    "android": {
+      "package": "com.tethered.couplememory",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFF6EC"
+      },
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO",
+        "RECORD_AUDIO",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "ACCESS_WIFI_STATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow Tethered to access your photos to build your relationship timeline.",
+          "savePhotosPermission": "Allow Tethered to save memories to your library.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Tethered to pick photos for memories."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow Tethered to record voice notes for your partner."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": { "projectId": "your-eas-project-id" }
+    }
+  }
+}
