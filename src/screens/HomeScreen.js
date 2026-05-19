@@ -9,6 +9,7 @@ import PrimaryButton from '../components/PrimaryButton';
 import {
   getProfile, memories, occasions, letters, blackbox, moods,
 } from '../services/storage';
+import { pickMemoryOfDay } from '../services/notifications';
 import { formatLongDate, yearsSince, nextAnniversary, daysUntil } from '../utils/dates';
 
 // Home — at-a-glance overview: today's mood prompt, days together,
@@ -18,6 +19,7 @@ export default function HomeScreen({ navigation }) {
   const [counts, setCounts] = useState({ memories: 0, letters: 0, blackbox: 0, occasions: 0 });
   const [upcoming, setUpcoming] = useState([]);
   const [todayMood, setTodayMood] = useState(null);
+  const [memoryOfDay, setMemoryOfDay] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const reload = useCallback(async () => {
@@ -28,6 +30,7 @@ export default function HomeScreen({ navigation }) {
     ]);
     setProfile(p);
     setCounts({ memories: m.length, letters: l.length, blackbox: b.length, occasions: o.length });
+    setMemoryOfDay(pickMemoryOfDay(m));
     // Compute upcoming anniversaries.
     const up = o
       .map((occ) => ({ ...occ, next: nextAnniversary(occ.date), days: daysUntil(nextAnniversary(occ.date)) }))
@@ -99,6 +102,40 @@ export default function HomeScreen({ navigation }) {
             </Text>
           </Pressable>
         </View>
+
+        {/* Memory of the Day */}
+        {memoryOfDay ? (
+          <Pressable
+            testID="home-mod-card"
+            onPress={() => navigation.navigate('MemoryOfDay')}
+            style={({ pressed }) => [
+              {
+                marginHorizontal: spacing.lg,
+                marginBottom: spacing.lg,
+                padding: spacing.lg,
+                borderRadius: radius.lg,
+                backgroundColor: colors.ivory,
+                borderLeftWidth: 3,
+                borderLeftColor: colors.honey,
+                transform: [{ scale: pressed ? 0.99 : 1 }],
+              },
+              shadows.card,
+            ]}
+          >
+            <Text style={[text.caption, { color: colors.terracotta, marginBottom: 6 }]}>
+              Memory of the day · {new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+            </Text>
+            <Text style={[text.subtitle, { color: colors.ink, marginBottom: 4 }]}>
+              {memoryOfDay.title || formatLongDate(memoryOfDay.date || memoryOfDay.createdAt)}
+            </Text>
+            <Text style={[text.body, { color: colors.inkSoft }]} numberOfLines={3}>
+              {memoryOfDay.note || 'Tap to relive this.'}
+            </Text>
+            <Text style={[text.caption, { color: colors.inkFaint, marginTop: spacing.sm }]}>
+              Tap to read in full
+            </Text>
+          </Pressable>
+        ) : null}
 
         {/* Quick stats */}
         <View style={{ flexDirection: 'row', paddingHorizontal: spacing.lg, gap: spacing.sm, marginBottom: spacing.lg }}>
@@ -175,6 +212,7 @@ export default function HomeScreen({ navigation }) {
           <Shortcut label="Write a letter" onPress={() => navigation.navigate('Letters')} testID="sc-letters" />
           <Shortcut label="Couple quiz" onPress={() => navigation.navigate('Quiz')} testID="sc-quiz" />
           <Shortcut label="Photo library" onPress={() => navigation.navigate('PhotoPicker')} testID="sc-photos" />
+          <Shortcut label="Voice notes" onPress={() => navigation.navigate('VoiceNotes')} testID="sc-voice" />
           <Shortcut label="Black box" onPress={() => navigation.navigate('BlackBox')} testID="sc-vault" />
         </View>
       </ScrollView>

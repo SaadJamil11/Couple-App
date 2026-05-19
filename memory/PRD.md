@@ -68,11 +68,14 @@ my github.
 
 - Onboarding (names, start date, couple title, fully local)
 - Home dashboard with today\u2019s mood, days-together counter, upcoming
-  anniversaries, quick-access shortcuts
+  anniversaries, **Memory of the Day card**, quick-access shortcuts
 - Timeline with seasonal "Time Cards" grouping photos, memories, chats,
-  milestones
-- Timeline Detail screen
+  voice notes, and milestones
+- Timeline Detail screen (renders all five item types incl. voice notes)
 - Memory CRUD (text + photo + mood + author)
+- **Voice Notes** screen (record / playback / delete, persisted in
+  `FileSystem.documentDirectory/voice/`)
+- **Memory of the Day** dedicated screen + 9 a.m. daily notification
 - Relationship Calendar (with month grid + countdowns)
 - Add Occasion with suggestion chips + push-to-Google-Calendar (long-press)
 - Black Box / Vault: sealed letters with 1 / 5 / 10 / 20 / 25-year unlocks
@@ -81,20 +84,30 @@ my github.
 - Photo Picker reading the device library (paginated, manual selection)
 - Couple Quiz with four hand-written packs, pass-the-phone gameplay,
   scoring + verdict
+- **Local notifications**: daily Memory of the Day, anniversary
+  7-day-before + day-of, Black Box unlock day-of, weekly Sunday letter
+  nudge — all idempotent, refreshed on every cold start
+- **PDF photobook export** with editorial A4 layout (cover, chapter
+  pages, photo plates, memories, milestones, letters) via expo-print +
+  expo-sharing
 - Settings: Google sign-in, Firebase push/pull, pairing code, manual
-  text export/import, reset
+  text export/import, reminders on/off, PDF export, reset
 
 ## Backlog (priority order)
 
 - **P1** Face clustering on-device (TensorFlow Lite + MobileFaceNet) so
-  the photo picker can auto-suggest the couple\u2019s photos.
-- **P1** Voice-note recorder using `expo-av`, surfaced on Timeline.
+  the photo picker can auto-suggest the couple\u2019s photos.  *Requires a
+  custom dev-client (TFLite native module) — deferred from v1.*
 - **P2** Local Wi-Fi peer sync over Bonjour/mDNS (replaces Firebase for
-  fully offline households).
-- **P2** Push notifications: yearly anniversary reminders, weekly letter
-  nudges, Black Box "your letter is opening soon" countdown.
-- **P3** PDF / printable photobook export.
-- **P3** Widget: days to next anniversary on the home screen.
+  fully offline households).  *Requires a native networking module —
+  deferred from v1.*
+- **P2** Cloud-sync voice-note **audio files** (currently only
+  metadata syncs; the binary lives on the recording device until
+  exported via PDF or manual share). Could swap to Firebase Storage,
+  but pulls the app out of the strict free tier.
+- **P3** Widget on the home screen showing days to next anniversary
+  (iOS WidgetKit / Android AppWidget — requires native code).
+- **P3** Waveform visualisation on the voice-note player.
 
 ## What\u2019s deferred and why
 

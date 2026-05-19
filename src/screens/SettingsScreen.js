@@ -19,6 +19,10 @@ import {
   firebaseAvailable, pushSnapshot, pullSnapshot,
 } from '../services/firebaseSync';
 import { exportAsText, importFromText, generatePairingCode, getDeviceLabel } from '../services/peerSync';
+import {
+  refreshAllNotifications, cancelAllNotifications, getScheduledCount, requestNotificationPermission,
+} from '../services/notifications';
+import { exportPhotobook } from '../services/pdfExport';
 
 // expo-clipboard isn't in the original deps; soft-fallback if missing.
 async function copy(value) {
@@ -34,13 +38,18 @@ export default function SettingsScreen({ navigation }) {
   const [pair, setPair] = useState(null);
   const [importing, setImporting] = useState('');
   const [syncing, setSyncing] = useState(false);
+  const [scheduled, setScheduled] = useState(0);
+  const [exporting, setExporting] = useState(false);
   const { enabled: googleEnabled, request, response, promptAsync } = useGoogleAuth();
 
   const reload = useCallback(async () => {
-    const [p, g, sp] = await Promise.all([getProfile(), getStoredGoogle(), getSyncPair()]);
+    const [p, g, sp, n] = await Promise.all([
+      getProfile(), getStoredGoogle(), getSyncPair(), getScheduledCount(),
+    ]);
     setProfile(p);
     setGoogle(g);
     setPair(sp);
+    setScheduled(n);
   }, []);
 
   useFocusEffect(useCallback(() => { reload(); }, [reload]));
@@ -150,6 +159,39 @@ export default function SettingsScreen({ navigation }) {
     );
   };
 
+  const enableNotifications = async () => {
+    const granted = await requestNotificationPermission();
+    if (!granted) {
+      Alert.alert('Permission denied', 'Open your phone settings and allow notifications for Tethered.');
+      return;
+    }
+    const res = await refreshAllNotifications();
+    if (res.skipped) {
+      Alert.alert('Could not schedule', 'Notifications are unavailable on this device.');
+    } else {
+      const n = await getScheduledCount();
+      setScheduled(n);
+      Alert.alert('All set', `${n} reminders scheduled — Memory of the day, anniversaries, Black Box, and the weekly letter nudge.`);
+    }
+  };
+
+  const turnOffNotifications = async () => {
+    await cancelAllNotifications();
+    setScheduled(0);
+    Alert.alert('Quiet mode', 'All Tethered reminders cancelled.');
+  };
+
+  const downloadPdf = async () => {
+    setExporting(true);
+    try {
+      await exportPhotobook();
+    } catch (e) {
+      Alert.alert('Could not export', e?.message || 'Try again with at least one memory saved.');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.paper }} edges={['top']}>
       <ScrollView contentContainerStyle={{ paddingBottom: spacing.xxl }}>
@@ -249,6 +291,32 @@ export default function SettingsScreen({ navigation }) {
         </Section>
 
         {/* Profile */}
+        <Section title="Reminders">
+          <Text style={[text.bodySmall, { color: colors.inkSoft, marginBottom: spacing.md }]}>
+            Tethered can quietly nudge you — one memory each morning, anniversaries the week before, a vault opening on the day, and a soft Sunday-evening letter prompt.
+            {scheduled ? `\n\n${scheduled} reminders currently scheduled.` : ''}
+          </Text>
+          <View style={{ flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' }}>
+            <PrimaryButton label="Turn on reminders" onPress={enableNotifications} testID="notif-on" />
+            {scheduled > 0 ? (
+              <PrimaryButton label="Quiet mode" variant="ghost" onPress={turnOffNotifications} testID="notif-off" />
+            ) : null}
+          </View>
+        </Section>
+
+        <Section title="Print our story">
+          <Text style={[text.bodySmall, { color: colors.inkSoft, marginBottom: spacing.md }]}>
+            Export everything — chapters, photos, milestones, letters — as a single beautifully laid-out PDF you can print, gift, or stash on a hard drive.
+          </Text>
+          <PrimaryButton
+            label="Generate PDF photobook"
+            onPress={downloadPdf}
+            loading={exporting}
+            testID="pdf-export"
+            style={{ alignSelf: 'flex-start' }}
+          />
+        </Section>
+
         <Section title="Profile">
           {profile ? (
             <View>

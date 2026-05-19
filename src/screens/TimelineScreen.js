@@ -8,21 +8,21 @@ import ScreenHeader from '../components/ScreenHeader';
 import TimeCard from '../components/TimeCard';
 import EmptyState from '../components/EmptyState';
 import PrimaryButton from '../components/PrimaryButton';
-import { memories, occasions, chats, getSelectedPhotoIds } from '../services/storage';
+import { memories, occasions, chats, voiceNotes, getSelectedPhotoIds } from '../services/storage';
 import { getAssetsByIds } from '../services/photos';
 import { buildTimeline } from '../services/timeline';
 
 // Timeline — the editorial spine of the app. Combines memories, photos,
-// chats, and milestones into seasonal "chapters". Tap a chapter to open
-// the full Timeline detail screen.
+// chats, voice notes, and milestones into seasonal "chapters". Tap a
+// chapter to open the full Timeline detail screen.
 export default function TimelineScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const reload = useCallback(async () => {
     setLoading(true);
-    const [m, o, c, photoIds] = await Promise.all([
-      memories.list(), occasions.list(), chats.list(), getSelectedPhotoIds(),
+    const [m, o, c, v, photoIds] = await Promise.all([
+      memories.list(), occasions.list(), chats.list(), voiceNotes.list(), getSelectedPhotoIds(),
     ]);
     let assets = [];
     try {
@@ -30,7 +30,7 @@ export default function TimelineScreen({ navigation }) {
     } catch {
       assets = [];
     }
-    setGroups(buildTimeline({ memories: m, chats: c, occasions: o, assets }));
+    setGroups(buildTimeline({ memories: m, chats: c, occasions: o, assets, voiceNotes: v }));
     setLoading(false);
   }, []);
 

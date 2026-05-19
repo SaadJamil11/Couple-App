@@ -6,7 +6,7 @@ import { Image } from 'expo-image';
 import { colors, spacing, radius, shadows } from '../theme/colors';
 import { text } from '../theme/typography';
 import ScreenHeader from '../components/ScreenHeader';
-import { memories, occasions, chats, getSelectedPhotoIds } from '../services/storage';
+import { memories, occasions, chats, voiceNotes, getSelectedPhotoIds } from '../services/storage';
 import { getAssetsByIds } from '../services/photos';
 import { buildTimeline } from '../services/timeline';
 import { formatLongDate } from '../utils/dates';
@@ -20,12 +20,12 @@ export default function TimelineDetailScreen({ route, navigation }) {
   const [items, setItems] = useState([]);
 
   const reload = useCallback(async () => {
-    const [m, o, c, photoIds] = await Promise.all([
-      memories.list(), occasions.list(), chats.list(), getSelectedPhotoIds(),
+    const [m, o, c, v, photoIds] = await Promise.all([
+      memories.list(), occasions.list(), chats.list(), voiceNotes.list(), getSelectedPhotoIds(),
     ]);
     let assets = [];
     try { assets = await getAssetsByIds(photoIds); } catch { /* offline / no permission */ }
-    const groups = buildTimeline({ memories: m, chats: c, occasions: o, assets });
+    const groups = buildTimeline({ memories: m, chats: c, occasions: o, assets, voiceNotes: v });
     const group = groups.find((g) => g.key === groupKey);
     setItems(group ? group.items.slice().reverse() : []);
   }, [groupKey]);
@@ -139,6 +139,41 @@ function Item({ item }) {
           <Text style={[text.body, { color: fromA ? colors.ink : colors.paper }]}>{item.data.text}</Text>
         </View>
         <Text style={[text.caption, { color: colors.inkFaint, marginTop: 4 }]}>{when}</Text>
+      </View>
+    );
+  }
+  if (item.kind === 'voice') {
+    return (
+      <View
+        style={{
+          marginHorizontal: spacing.lg,
+          marginBottom: spacing.md,
+          padding: spacing.md,
+          borderRadius: radius.md,
+          backgroundColor: colors.card,
+          borderLeftWidth: 3,
+          borderLeftColor: colors.sage,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+        }}
+      >
+        <View
+          style={{
+            width: 36, height: 36, borderRadius: 18,
+            backgroundColor: colors.ink, alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <Text style={{ color: colors.paper, fontSize: 14 }}>♪</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={[text.body, { color: colors.ink, fontWeight: '600' }]} numberOfLines={1}>
+            {item.data.label || 'Voice note'}
+          </Text>
+          <Text style={[text.caption, { color: colors.inkFaint }]}>
+            {when}{item.data.authorName ? ` · ${item.data.authorName}` : ''}
+          </Text>
+        </View>
       </View>
     );
   }

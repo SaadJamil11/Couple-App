@@ -2,7 +2,7 @@
 // chronological feed, grouped into "time cards" per season.
 import { seasonOf } from '../utils/dates';
 
-export function buildTimeline({ memories = [], chats = [], occasions = [], assets = [] }) {
+export function buildTimeline({ memories = [], chats = [], occasions = [], assets = [], voiceNotes = [] }) {
   const items = [];
 
   for (const m of memories) {
@@ -37,6 +37,14 @@ export function buildTimeline({ memories = [], chats = [], occasions = [], asset
       data: a,
     });
   }
+  for (const v of voiceNotes) {
+    items.push({
+      kind: 'voice',
+      when: v.createdAt,
+      id: `voice-${v.id}`,
+      data: v,
+    });
+  }
 
   items.sort((a, b) => new Date(b.when) - new Date(a.when));
 
@@ -53,7 +61,7 @@ export function buildTimeline({ memories = [], chats = [], occasions = [], asset
 }
 
 export function summariseGroup(group) {
-  const counts = { memory: 0, chat: 0, occasion: 0, photo: 0 };
+  const counts = { memory: 0, chat: 0, occasion: 0, photo: 0, voice: 0 };
   for (const it of group.items) counts[it.kind] = (counts[it.kind] || 0) + 1;
   return counts;
 }

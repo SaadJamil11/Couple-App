@@ -18,19 +18,31 @@ cloud sync.
 
 | Tab | What it is |
 | --- | --- |
-| **Home** | Today\u2019s mood card, days together, next upcoming milestones, shortcuts everywhere. |
-| **Timeline (Story)** | Photos + memories + chats + milestones, auto-grouped into seasonal "time cards" you can tap to relive a whole chapter. |
+| **Home** | Today\u2019s mood card, **Memory of the Day** resurfaced from your saved notes, days together, next upcoming milestones, shortcuts everywhere. |
+| **Timeline (Story)** | Photos + memories + chats + **voice notes** + milestones, auto-grouped into seasonal "time cards" you can tap to relive a whole chapter. |
 | **Calendar** | Hand-edited relationship milestones, marked on a clean month grid. Long-press any milestone to push it to Google Calendar (yearly repeat). |
 | **Vault (Black Box)** | Letters and photos sealed until a future date — 1, 5, 10, 20, or 25 years away. The app refuses to open them until the day arrives. |
-| **Us (Settings)** | Google sign-in, partner sync code, manual text export/import, profile, reset. |
+| **Us (Settings)** | Google sign-in, partner sync code, manual text export/import, **reminders**, **PDF photobook export**, profile, reset. |
 
 Plus, accessible from the Home tab:
 
 - **Memories** — long-form, mood-tagged moments with photos
 - **Letters** — slow weekly/bi-monthly letters to your partner, with prompts
+- **Voice Notes** — record a whisper, an apology, a song; play back any time
+- **Memory of the Day** — one randomly-but-deterministically chosen memory per day, mirrored to a 9 a.m. notification
 - **Couple Quiz** — four hand-written question packs in pass-the-phone format
 - **Mood check-in** — one entry per day, per partner
 - **Photo Picker** — manually mark which photos belong to your shared story (face-detection auto-pick is on the roadmap)
+
+### Reminders Tethered schedules for you (opt-in, from Settings → Reminders)
+
+| Reminder | When |
+| --- | --- |
+| Memory of the day | Daily, 9:00 a.m. |
+| Anniversary heads-up | 7 days before every occasion |
+| Anniversary day-of | 8:30 a.m. on the day |
+| Vault opening | 9:00 a.m. on the unlock date |
+| Sunday letter nudge | Every Sunday, 7:00 p.m. |
 
 ---
 
@@ -178,12 +190,9 @@ projects and build with Android Studio / Xcode locally.
 
 ## Roadmap
 
-- On-device face clustering to auto-suggest "this is you two" photos
-- Local Wi-Fi peer sync over Bonjour / mDNS (currently uses Firebase or
-  text-share)
-- Voice-note recorder with waveform
-- Widget showing days until next anniversary
-- Export the whole timeline as a printable PDF photobook
+- On-device face clustering to auto-suggest "this is you two" photos (requires bare workflow or a custom dev-client — deferred from v1)
+- Local Wi-Fi peer sync over Bonjour / mDNS (requires native modules — deferred from v1; current alternatives: Firebase + base64 text-share)
+- Home-screen widget showing days until next anniversary (iOS WidgetKit / Android AppWidget — native code)
 
 ---
 

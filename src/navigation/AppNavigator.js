@@ -23,6 +23,8 @@ import QuizPlayScreen from '../screens/QuizPlayScreen';
 import MoodScreen from '../screens/MoodScreen';
 import PhotoPickerScreen from '../screens/PhotoPickerScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import VoiceNotesScreen from '../screens/VoiceNotesScreen';
+import MemoryOfDayScreen from '../screens/MemoryOfDayScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -128,6 +130,8 @@ export default function AppNavigator({ initialRoute }) {
         <Stack.Screen name="QuizPlay" component={QuizPlayScreen} />
         <Stack.Screen name="Mood" component={MoodScreen} />
         <Stack.Screen name="PhotoPicker" component={PhotoPickerScreen} />
+        <Stack.Screen name="VoiceNotes" component={VoiceNotesScreen} />
+        <Stack.Screen name="MemoryOfDay" component={MemoryOfDayScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

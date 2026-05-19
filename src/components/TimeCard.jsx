@@ -45,6 +45,7 @@ export default function TimeCard({ group, index, onPress }) {
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
         <Pill label={`${counts.photo} photos`} hidden={!counts.photo} tone="sage" />
         <Pill label={`${counts.memory} notes`} hidden={!counts.memory} tone="honey" />
+        <Pill label={`${counts.voice} voice`} hidden={!counts.voice} tone="sage" />
         <Pill label={`${counts.chat} chats`} hidden={!counts.chat} tone="terracotta" />
         <Pill label={`${counts.occasion} milestones`} hidden={!counts.occasion} tone="ink" />
       </View>
