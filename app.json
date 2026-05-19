@@ -16,7 +16,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tethered.couplememory",
+      "buildNumber": "1.0.0",
       "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
         "NSPhotoLibraryUsageDescription": "Tethered needs access to your photos so it can build a beautiful timeline of your relationship.",
         "NSPhotoLibraryAddUsageDescription": "Tethered can save memory images back to your library.",
         "NSMicrophoneUsageDescription": "Tethered uses the microphone to record voice notes for your partner."
@@ -66,7 +68,7 @@
       ]
     ],
     "extra": {
-      "eas": { "projectId": "your-eas-project-id" }
+      "eas": { "projectId": "REPLACE_AFTER_RUNNING_eas_init" }
     }
   }
 }
