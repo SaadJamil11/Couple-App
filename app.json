@@ -21,7 +21,8 @@
         "ITSAppUsesNonExemptEncryption": false,
         "NSPhotoLibraryUsageDescription": "Tethered needs access to your photos so it can build a beautiful timeline of your relationship.",
         "NSPhotoLibraryAddUsageDescription": "Tethered can save memory images back to your library.",
-        "NSMicrophoneUsageDescription": "Tethered uses the microphone to record voice notes for your partner."
+        "NSMicrophoneUsageDescription": "Tethered uses the microphone to record voice notes for your partner.",
+        "NSCameraUsageDescription": "Tethered uses the camera to allow you to take new photos for your memories."
       }
     },
     "android": {
@@ -57,7 +58,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow Tethered to pick photos for memories."
+          "photosPermission": "Allow Tethered to pick photos for memories.",
+          "cameraPermission": "Allow Tethered to take photos for memories."
         }
       ],
       [
